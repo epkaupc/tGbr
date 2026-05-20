@@ -97,7 +97,4 @@ const styles = StyleSheet.create({
   },
 });
 
-Text vitu
-
-
-Text vitu2
+Text teste commit 1234
