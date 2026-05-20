@@ -96,3 +96,5 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
 });
+
+Text vitu
