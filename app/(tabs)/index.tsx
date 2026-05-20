@@ -164,3 +164,5 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
 });
+
+/*marcos caiu da escada esta semana*/
