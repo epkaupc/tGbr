@@ -12,6 +12,7 @@ import {
 
 type NotificationItem = {
   packageName?: string;
+  
   title?: string;
   text?: string;
   time?: string;
