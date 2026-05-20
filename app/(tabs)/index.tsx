@@ -97,5 +97,7 @@ const styles = StyleSheet.create({
   },
 });
 
+Text vitu
+
 
 Text vitu2
