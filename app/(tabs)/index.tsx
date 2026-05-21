@@ -12,7 +12,6 @@ import {
 
 type NotificationItem = {
   packageName?: string;
-  
   title?: string;
   text?: string;
   time?: string;
@@ -25,8 +24,11 @@ export default function HomeScreen() {
   const [status, setStatus] = useState("Aguardando permissão...");
 
   useEffect(() => {
+    console.log("NativeModules keys:", Object.keys(NativeModules));
+    console.log("NotificationGrabber:", NativeGrabber);
+
     if (!NativeGrabber) {
-      setStatus("Módulo nativo ainda não instalado.");
+      setStatus("Módulo NotificationGrabber não carregou.");
       return;
     }
 
@@ -54,11 +56,42 @@ export default function HomeScreen() {
     }
 
     if (!NativeGrabber) {
-      setStatus("Falta criar o módulo Android.");
+      setStatus("Módulo NotificationGrabber não carregou.");
+      console.log("NotificationGrabber está null/undefined");
       return;
     }
 
     NativeGrabber.openSettings();
+  }
+
+  function openOverlaySettings() {
+    if (Platform.OS !== "android") {
+      setStatus("Isso só funciona no Android.");
+      return;
+    }
+
+    if (!NativeGrabber) {
+      setStatus("Módulo NotificationGrabber não carregou.");
+      console.log("NotificationGrabber está null/undefined");
+      return;
+    }
+
+    NativeGrabber.openOverlaySettings();
+  }
+
+  function startBubble() {
+    if (Platform.OS !== "android") {
+      setStatus("Isso só funciona no Android.");
+      return;
+    }
+
+    if (!NativeGrabber) {
+      setStatus("Módulo NotificationGrabber não carregou.");
+      console.log("NotificationGrabber está null/undefined");
+      return;
+    }
+
+    NativeGrabber.startBubble();
   }
 
   return (
@@ -67,30 +100,20 @@ export default function HomeScreen() {
       <Text style={styles.subtitle}>{status}</Text>
 
       <Pressable style={styles.button} onPress={openSettings}>
-        <Text style={styles.buttonText}>Permitir acesso às notificações</Text>
+        <Text style={styles.buttonText}>
+          Permitir acesso às notificações
+        </Text>
       </Pressable>
 
-      <Pressable style={styles.button} onPress={() => NativeGrabber.openOverlaySettings()}>
-      <Text style={styles.buttonText}>Permitir aparecer sobre outros apps</Text>
+      <Pressable style={styles.button} onPress={openOverlaySettings}>
+        <Text style={styles.buttonText}>
+          Permitir aparecer sobre outros apps
+        </Text>
       </Pressable>
 
-      <Pressable
-       style={styles.button}
-      onPress={() => {
-    console.log("NativeModules:", NativeModules);
-    console.log("NativeGrabber:", NativeGrabber);
-
-    if (!NativeGrabber) {
-      console.log("NativeGrabber está null/undefined");
-      return;
-    }
-
-        NativeGrabber.startBubble();
-      }}
-      > 
+      <Pressable style={styles.button} onPress={startBubble}>
         <Text style={styles.buttonText}>Mostrar bolha</Text>
       </Pressable>
-
 
       <FlatList
         data={items}
@@ -178,5 +201,3 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
 });
-
-/*marcos caiu da escada esta semana*/
