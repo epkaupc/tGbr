@@ -15,7 +15,7 @@ public class NotificationGrabberPackage implements ReactPackage {
     @NonNull
     @Override
     public List<NativeModule> createNativeModules(@NonNull ReactApplicationContext reactContext) {
-        log.d("carregou o package notification");
+        Log.d("carregou o package notification");
         List<NativeModule> modules = new ArrayList<>();
         modules.add(new NotificationGrabberModule(reactContext));
         return modules;
