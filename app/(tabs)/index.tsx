@@ -74,8 +74,21 @@ export default function HomeScreen() {
       <Text style={styles.buttonText}>Permitir aparecer sobre outros apps</Text>
       </Pressable>
 
-      <Pressable style={styles.button} onPress={() => NativeGrabber.startBubble()}>
-      <Text style={styles.buttonText}>Mostrar bolha</Text>
+      <Pressable
+       style={styles.button}
+      onPress={() => {
+    console.log("NativeModules:", NativeModules);
+    console.log("NativeGrabber:", NativeGrabber);
+
+    if (!NativeGrabber) {
+      console.log("NativeGrabber está null/undefined");
+      return;
+    }
+
+        NativeGrabber.startBubble();
+      }}
+      > 
+        <Text style={styles.buttonText}>Mostrar bolha</Text>
       </Pressable>
 
 
