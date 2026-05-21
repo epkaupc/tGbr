@@ -1,5 +1,5 @@
 package com.anonymous.app;
-
+import android.util.Log;
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.Color;

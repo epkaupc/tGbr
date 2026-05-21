@@ -1,5 +1,5 @@
 package com.anonymous.app;
-
+import android.util.Log;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -23,6 +23,7 @@ public class NotificationGrabberModule extends ReactContextBaseJavaModule {
     @NonNull
     @Override
     public String getName() {
+        Log.d("notification_grabber", "Getting module name");
         return "NotificationGrabber";
     }
 
