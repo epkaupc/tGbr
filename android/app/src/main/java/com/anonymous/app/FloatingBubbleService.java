@@ -159,7 +159,7 @@ public class FloatingBubbleService extends Service {
         title.setGravity(Gravity.START);
 
         TextView subtitle = new TextView(this);
-        subtitle.setText(notificationGrabberPackage);
+        subtitle.setText("bolha ativa");
         subtitle.setTextColor(Color.LTGRAY);
         subtitle.setTextSize(14);
 
