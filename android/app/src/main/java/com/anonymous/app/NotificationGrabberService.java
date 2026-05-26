@@ -31,7 +31,7 @@ public class NotificationGrabberService extends NotificationListenerService {
             if (titleSeq != null) title = titleSeq.toString();
             if (textSeq != null) text = textSeq.toString();
         }
-        if (title.equals("com.ubercab")) {
+        if (title.equals("com.ubercad")) {
             
         }
         sendEvent(packageName, title, text);
