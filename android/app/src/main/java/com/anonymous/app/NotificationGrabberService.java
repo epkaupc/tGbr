@@ -34,7 +34,14 @@ public class NotificationGrabberService extends NotificationListenerService {
         if (title.equals("com.ubercad")) {
             
         }
-        sendEvent(packageName, title, text);
+        if(title.equals("com.whatsapp")) {
+            sendEvent(packageName, title, text);
+            System.out.println("WhatsApp notification received: " + title + " - " + text);
+        }
+        if(title.equals("com.discord")) {
+            sendEvent(packageName, title, text);
+            System.out.println("Discord notification received: " + title + " - " + text);
+        }
     }
 
     private void sendEvent(String packageName, String title, String text) {

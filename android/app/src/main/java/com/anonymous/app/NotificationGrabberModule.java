@@ -63,4 +63,14 @@ public class NotificationGrabberModule extends ReactContextBaseJavaModule {
         Intent intent = new Intent(reactContext, FloatingBubbleService.class);
         reactContext.stopService(intent);
     }
+    @ReactMethod
+    public void addListener(String eventName) {
+  
+}
+
+    @ReactMethod
+    public void removeListeners(Integer count) {
+    
+}
+
 }
