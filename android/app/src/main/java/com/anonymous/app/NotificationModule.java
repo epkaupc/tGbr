@@ -1,20 +1,24 @@
 package com.anonymous.app;
-import android.util.Log;
+
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.Build;
 import android.provider.Settings;
 
 import androidx.annotation.NonNull;
 
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.WritableMap;
 
-public class NotificationGrabberModule extends ReactContextBaseJavaModule {
+public class NotificationModule extends ReactContextBaseJavaModule {
+
     private final ReactApplicationContext reactContext;
 
-    public NotificationGrabberModule(ReactApplicationContext context) {
+    public NotificationModule(ReactApplicationContext context) {
         super(context);
         this.reactContext = context;
         NotificationGrabberService.reactContext = context;
@@ -23,7 +27,6 @@ public class NotificationGrabberModule extends ReactContextBaseJavaModule {
     @NonNull
     @Override
     public String getName() {
-        Log.d("notification_grabber", "Getting module name");
         return "NotificationGrabber";
     }
 
@@ -40,37 +43,41 @@ public class NotificationGrabberModule extends ReactContextBaseJavaModule {
                 Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                 Uri.parse("package:" + reactContext.getPackageName())
         );
-
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         reactContext.startActivity(intent);
     }
 
     @ReactMethod
     public void startBubble() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (!Settings.canDrawOverlays(reactContext)) {
-                openOverlaySettings();
-                return;
-            }
-        }
-
         Intent intent = new Intent(reactContext, FloatingBubbleService.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         reactContext.startService(intent);
     }
 
     @ReactMethod
-    public void stopBubble() {
-        Intent intent = new Intent(reactContext, FloatingBubbleService.class);
-        reactContext.stopService(intent);
+    public void getUltimaNotificacao(Promise promise) {
+        try {
+            SharedPreferences prefs = reactContext.getSharedPreferences("notificacoes", ReactApplicationContext.MODE_PRIVATE);
+
+            WritableMap map = Arguments.createMap();
+            map.putString("packageName", prefs.getString("ultimo_pacote", ""));
+            map.putString("title", prefs.getString("ultimo_titulo", ""));
+            map.putString("text", prefs.getString("ultimo_texto", ""));
+            map.putDouble("time", prefs.getLong("ultimo_tempo", 0));
+
+            promise.resolve(map);
+        } catch (Exception e) {
+            promise.reject("ERRO_NOTIFICACAO", e);
+        }
     }
+
     @ReactMethod
     public void addListener(String eventName) {
-  
-}
+        // Necessário para NativeEventEmitter no React Native novo
+    }
 
     @ReactMethod
     public void removeListeners(Integer count) {
-    
-}
-
+        // Necessário para NativeEventEmitter no React Native novo
+    }
 }

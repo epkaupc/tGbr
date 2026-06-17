@@ -1,5 +1,5 @@
 package com.anonymous.app;
-import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.facebook.react.ReactPackage;
@@ -11,13 +11,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class NotificationGrabberPackage implements ReactPackage {
+public class NotificationPackage implements ReactPackage {
+
     @NonNull
     @Override
     public List<NativeModule> createNativeModules(@NonNull ReactApplicationContext reactContext) {
-        Log.d("carregou o package notification", "package_loaded");
         List<NativeModule> modules = new ArrayList<>();
-        modules.add(new NotificationGrabberModule(reactContext));
+        modules.add(new NotificationModule(reactContext));
         return modules;
     }
 

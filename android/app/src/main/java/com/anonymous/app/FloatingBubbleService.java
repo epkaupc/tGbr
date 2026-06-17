@@ -18,6 +18,7 @@ public class FloatingBubbleService extends Service {
     private WindowManager windowManager;
     private TextView bubble;
     private LinearLayout panel;
+    private TextView subtitle;
 
     private WindowManager.LayoutParams bubbleParams;
     private WindowManager.LayoutParams panelParams;
@@ -74,10 +75,27 @@ public class FloatingBubbleService extends Service {
         bubble = null;
         panel = null;
     }
+    private void killApp() {
+        if (windowManager != null) {
+            try {
+                if (panelVisible && panel != null) {
+                    windowManager.removeView(panel);
+                }
+            } catch (Exception ignored) {}
 
+            try {
+                if (bubble != null) {
+                    windowManager.removeView(bubble);
+                }
+            } catch (Exception ignored) {}
+        }
+
+        panelVisible = false;
+        stopSelf();
+    }
     private void createBubble() {
         bubble = new TextView(this);
-        bubble.setText("●");
+        bubble.setText("Tgb");
         bubble.setTextSize(36);
         bubble.setTextColor(Color.WHITE);
         bubble.setGravity(Gravity.CENTER);
@@ -98,8 +116,8 @@ public class FloatingBubbleService extends Service {
         );
 
         bubbleParams.gravity = Gravity.TOP | Gravity.START;
-        bubbleParams.x = 100;
-        bubbleParams.y = 300;
+        bubbleParams.x = 400;
+        bubbleParams.y = 400;
 
         bubble.setOnTouchListener((v, event) -> {
             switch (event.getAction()) {
@@ -141,7 +159,24 @@ public class FloatingBubbleService extends Service {
             return false;
         });
     }
+   private void reFresha() {
+    if (subtitle != null) {
+        subtitle.setText(
+                "\nApp: " + NotificationGrabberService.UltimoPacote +
+                "\nTítulo: " + NotificationGrabberService.UltimoTitulo +
+                "\nTexto: " + NotificationGrabberService.UltimoTexto
+        );
+    }
 
+    if (windowManager != null && panel != null && panelVisible) {
+        try {
+            windowManager.updateViewLayout(panel, panelParams);
+            Log.d("Bubble", "Painel atualizado");
+        } catch (Exception e) {
+            Log.e("Bubble", "Erro ao atualizar painel", e);
+        }
+    }
+}     
     private void createPanel() {
         panel = new LinearLayout(this);
         panel.setOrientation(LinearLayout.VERTICAL);
@@ -158,29 +193,50 @@ public class FloatingBubbleService extends Service {
         title.setTextSize(18);
         title.setGravity(Gravity.START);
 
-        TextView subtitle = new TextView(this);
-        subtitle.setText("bolha ativa");
+        subtitle = new TextView(this);;
+        subtitle.setText(
+            "\nApp: " + NotificationGrabberService.UltimoPacote +
+            "\nTítulo: " + NotificationGrabberService.UltimoTitulo +
+            "\nTexto: " + NotificationGrabberService.UltimoTexto
+        );
         subtitle.setTextColor(Color.LTGRAY);
         subtitle.setTextSize(14);
 
         TextView close = new TextView(this);
-        close.setText("Fechar");
+        close.setText("Minimizar");
         close.setTextColor(Color.parseColor("#60A5FA"));
         close.setTextSize(16);
         close.setPadding(0, 18, 0, 0);
 
+        TextView kill = new TextView(this);
+        kill.setText("Fechar bolha");
+        kill.setTextColor(Color.parseColor("#EF4444"));
+        kill.setTextSize(16);
+        kill.setPadding(0, 18, 0, 0);
+        
+        TextView refresh = new TextView(this);
+        refresh.setText("Atualizar");
+        refresh.setTextColor(Color.parseColor("#10B981"));
+        refresh.setTextSize(16);
+        refresh.setPadding(0, 18, 0, 0);
+
         close.setOnClickListener(v -> togglePanel());
+        refresh.setOnClickListener(v -> reFresha());
+        kill.setOnClickListener(v -> killApp());
+        
 
         panel.addView(title);
         panel.addView(subtitle);
         panel.addView(close);
+        panel.addView(refresh);
+        panel.addView(kill);
 
         panelParams = new WindowManager.LayoutParams(
                 520,
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-                        | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+                | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
                 PixelFormat.TRANSLUCENT
         );
 
